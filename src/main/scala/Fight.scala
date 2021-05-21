@@ -13,13 +13,23 @@ object Fight {
     randomFromList(allowed)
   }
 
+  def killTheHipster(sm: StatusMessage): Option[Hero] = sm.opponents.filter(_.isAlive).minByOption(h => h.health + h.armor + h.resistance)
+
+  def saveTheHipster(sm: StatusMessage, heroes: List[Hero]): Option[Hero] = heroes.filter(_.isAlive).minByOption(h => h.health + h.armor + h.resistance)
+
+  def preventOverHeal(s: Skill, targets: List[Hero]) =
+    s.`type` match {
+      case Hero.Skill.EffectType.health => targets.filter(h => s.effect <= h.missingHealth)
+      case _                            => targets
+    }
+
   def chooseTarget(h: Hero, s: Skill, sm: StatusMessage): Option[Hero] =
     s.allowedTarget match {
       case AllowedTarget.self                    => Some(h)
-      case AllowedTarget.others if s.isPleasant  => randomFromList(sm.you.filter(_ != h).filter(_.isAlive))
-      case AllowedTarget.others if !s.isPleasant => randomFromList(sm.opponents.filter(_.isAlive))
-      case AllowedTarget.all if s.isPleasant     => randomFromList(sm.you.filter(_.isAlive))
-      case AllowedTarget.all if !s.isPleasant    => randomFromList(sm.opponents.filter(_.isAlive))
+      case AllowedTarget.others if s.isPleasant  => saveTheHipster(sm, preventOverHeal(s, sm.you.filter(_ != h)))
+      case AllowedTarget.all if s.isPleasant     => saveTheHipster(sm, preventOverHeal(s, sm.you))
+      case AllowedTarget.others if !s.isPleasant => killTheHipster(sm)
+      case AllowedTarget.all if !s.isPleasant    => killTheHipster(sm)
     }
 
   def actionForHero(h: Hero, sm: StatusMessage): Option[ActionMessage] = {

@@ -8,15 +8,16 @@ case class Hero(
     resistance: Int,
     skills: List[Hero.Skill],
     id: Int = 0,
-    buffs: Map[String, Hero.Buff] = Map(),
-    cooldowns: Map[String, Long] = Map(),
+    buffs: Map[String, Hero.Buff],
+    cooldowns: Map[String, Long],
     currentSkill: Int = -1,
     currentStarted: Long = -1,
-    maxHealth: Int = 0,
-    maxPower: Int = 0
+    maxHealth: Int,
+    maxPower: Int
 ) {
   def isAlive: Boolean = health > 0
   def isBusy: Boolean = currentSkill != -1
+  def missingHealth: Int = maxHealth - health
 }
 
 object Hero {
