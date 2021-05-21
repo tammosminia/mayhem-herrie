@@ -1,5 +1,17 @@
-@main def hello: Unit = 
-  println("Hello world!")
-  println(msg)
+import zio.console._
 
-def msg = "I was compiled by Scala 3. :)"
+object Main extends zio.App {
+  def run(args: List[String]) =
+    mayhem.exitCode
+
+  val mayhem =
+    for {
+      _    <- putStrLn("Mayhem!")
+      name <- getStrLn
+      _    <- putStrLn(s"Hello, ${name}, welcome to ZIO!")
+    } yield ()
+}
+
+//@main def mayhem: Unit =
+//  println("Mayhem!")
+//  println(msg)
