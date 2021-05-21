@@ -16,6 +16,7 @@ case class Hero(
     maxPower: Int = 0
 ) {
   def isAlive: Boolean = health > 0
+  def isBusy: Boolean = currentSkill != -1
 }
 
 object Hero {

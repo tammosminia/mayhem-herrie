@@ -1,14 +1,13 @@
-import Messages.{AcceptMessage, ActionMessage, ErrorMessage, RegisterMessage, StatusMessage, WelcomeMessage}
+import Fight.actionForStatus
+import Messages.{ErrorMessage, RegisterMessage, StatusMessage, WelcomeMessage}
 import akka.actor.{Actor, ActorRef, Props}
+import akka.io.Tcp._
 import akka.io.{IO, Tcp}
 import akka.util.{ByteString, CompactByteString}
-import akka.io.Tcp._
+import spray.json._
 
 import java.net.InetSocketAddress
-import scala.util.{Random, Try}
-import spray.json._
-import AkkaClient._
-import Fight.actionForStatus
+import scala.util.Try
 
 object AkkaClient {
   def props(remote: InetSocketAddress, rm: RegisterMessage, noisy: Boolean) = Props(classOf[AkkaClient], remote, rm, noisy)

@@ -1,6 +1,6 @@
 import Hero.Skill
 import Hero.Skill.AllowedTarget
-import Messages.FightStatus.{fighting, overtime, ready}
+import Messages.FightStatus.{fighting, overtime}
 import Messages.{ActionMessage, StatusMessage}
 
 import scala.util.Random
@@ -17,11 +17,15 @@ object Fight {
       case AllowedTarget.all if !s.isPleasant    => randomFromList(sm.opponents)
     }
 
-  def actionForHero(h: Hero, sm: StatusMessage): Option[ActionMessage] =
-    for {
-      skill <- randomFromList(h.skills)
-      target <- chooseTarget(h, skill, sm)
-    } yield ActionMessage(h.id, skill.id, target.id, false)
+  def actionForHero(h: Hero, sm: StatusMessage): Option[ActionMessage] = {
+    if (!h.isAlive || h.isBusy) None
+    else {
+      for {
+        skill <- randomFromList(h.skills.filter(_.cooldown > 0))
+        target <- chooseTarget(h, skill, sm)
+      } yield ActionMessage(h.id, skill.id, target.id, false)
+    }
+  }
 
   val canFight = List(fighting, overtime)
   def actionForStatus(sm: StatusMessage): List[ActionMessage] = {
