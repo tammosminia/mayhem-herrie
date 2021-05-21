@@ -1,6 +1,6 @@
 import java.util.Date
 
-class Messages {
+object Messages {
   abstract class OutputMessage {
 //    def getTimestamp: Date
   }
@@ -12,7 +12,14 @@ class Messages {
   case class WelcomeMessage(timestamp: Date) extends OutputMessage
   case class AcceptMessage(timestamp: Date) extends OutputMessage
   case class ErrorMessage(message: String, timestamp: Date) extends OutputMessage
-  case class StatusMessage(you: List[Hero], opponent: List[Hero], status: FightStatus.Value, result: FightResult.Value, timestamp: Date) extends OutputMessage {
+
+  case class StatusMessage(
+      you: List[Hero],
+      opponent: List[Hero],
+      status: FightStatus.Value,
+      result: FightResult.Value,
+      timestamp: Date
+  ) extends OutputMessage {
     override def toString: String = {
       return "StatusMessage{" + "you=" + you + ", opponent=" + opponent + ", status=" + status + ", result=" + result + ", timestamp=" + timestamp + '}'
     }
@@ -26,4 +33,6 @@ class Messages {
     type FightResult = Value
     val win, loss = Value
   }
+
+  implicit val jsonFormat: JsonFormat[RegisterMessage] = jsonFormat3(RegisterMessage.apply)
 }
