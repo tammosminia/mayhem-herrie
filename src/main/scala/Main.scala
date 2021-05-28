@@ -6,6 +6,16 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 object Main extends App {
+  val echt = new InetSocketAddress("mayhem.jdriven.com", 1337)
+
+  val rm = RegisterMessage("Herrie", "tammosminia@jdriven.com", "***")
+
+  val s = ActorSystem("herrie")
+  val a = s.actorOf(AkkaClient.props(echt, rm, true))
+  Await.result(s.whenTerminated, Duration.Inf)
+}
+
+object MainTest extends App {
   val lokaal = new InetSocketAddress("0.0.0.0", 1337)
   val echt = new InetSocketAddress("mayhem.jdriven.com", 1337)
 

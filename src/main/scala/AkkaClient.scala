@@ -73,7 +73,7 @@ class AkkaClient(remote: InetSocketAddress, rm: RegisterMessage, noisy: Boolean)
       }
       Try(s.parseJson.convertTo[ErrorMessage]).map { e =>
         println(s"problem. exit! $e")
-        system.terminate()
+//        system.terminate()
       }
 
   }
